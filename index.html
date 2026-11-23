@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="brass" data-finish="matte">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clockwork</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app" id="app">
+  <header class="top">
+    <h1>Clockwork</h1>
+    <nav class="top-actions">
+      <select class="icon-btn" id="themeSel" aria-label="Theme"><option value="brass">Brass</option><option value="acid">Acid</option><option value="ember">Ember</option><option value="violet">Violet</option><option value="azure">Azure</option><option value="crimson">Crimson</option><option value="ash">Ash</option></select>
+      <select class="icon-btn" id="finishSel" aria-label="Finish"><option value="matte">Matte</option><option value="glow">Glow</option></select>
+      <button class="icon-btn" id="zenBtn" aria-pressed="false" title="Hide everything but the timer (F)">Zen</button>
+      <button class="icon-btn" id="settingsBtn">Settings</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="clock" aria-label="Timer">
+      <div class="modes" role="tablist">
+        <button role="tab" data-mode="focus" aria-selected="true">Focus</button>
+        <button role="tab" data-mode="short" aria-selected="false">Short break</button>
+        <button role="tab" data-mode="long" aria-selected="false">Long break</button>
+      </div>
+
+      <div class="dial" id="dial">
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <g class="gear" id="gear"></g>
+          <circle class="track" cx="200" cy="200" r="150"/>
+          <circle class="progress" id="progress" cx="200" cy="200" r="150" transform="rotate(-90 200 200)"/>
+        </svg>
+        <div class="readout">
+          <time id="time" role="timer" aria-live="off">25:00</time>
+          <p id="label">Ready when you are</p>
+          <p class="cycle" id="cycle" aria-label="Session progress"></p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn ghost" id="resetBtn" title="Reset (R)">Reset</button>
+        <button class="btn primary" id="startBtn" title="Start / pause (Space)">Start</button>
+        <button class="btn ghost" id="skipBtn" title="Skip (S)">Skip</button>
+      </div>
+    <form id="parkForm" class="park"><input id="parkInput" type="text" placeholder="Park a thought for later (P)" maxlength="100" autocomplete="off" aria-label="Park a thought"></form>
+    </section>
+
+    <aside class="side">
+      <section class="panel" id="tasksPanel">
+        <h2>Tasks</h2>
+        <form id="taskForm" class="task-form">
+          <input id="taskInput" type="text" placeholder="What are you working on?" maxlength="80" autocomplete="off" aria-label="New task">
+          <input id="taskEst" type="number" min="1" max="12" value="1" aria-label="Estimated sessions">
+          <button class="btn small" type="submit">Add</button>
+        </form>
+        <ul id="taskList" class="tasks"></ul>
+        <p class="empty" id="taskEmpty">Add a task, then pick it to log sessions against it.</p>
+      </section>
+
+      <section class="panel" id="soundPanel">
+        <h2>Ambience</h2>
+        <div class="sounds" id="sounds">
+          <button data-sound="off" aria-pressed="true">Silent</button>
+          <button data-sound="rain" aria-pressed="false">Rain</button>
+          <button data-sound="wind" aria-pressed="false">Wind</button>
+        </div>
+        <label class="slider">Volume <input type="range" id="volume" min="0" max="100" value="40"></label>
+        <div class="sounds amb-edit">
+          <select id="ambSlot" aria-label="Sound to change"><option value="rain">Rain</option><option value="wind">Wind</option></select>
+          <button id="ambChange">Use my file</button><button id="ambReset">Restore default</button>
+        </div>
+        <input type="file" id="ambFile" accept="audio/*" hidden>
+      </section>
+
+      <section class="panel" id="musicPanel">
+        <h2>Your music</h2>
+        <select id="plSel" class="wide" aria-label="Playlist"></select>
+        <p class="now" id="nowPlaying">No tracks yet</p>
+        <div class="sounds">
+          <button id="mPrev">Prev</button><button id="mPlay">Play</button><button id="mNext">Next</button>
+          <button id="mShuffle" aria-pressed="false">Shuffle</button>
+        </div>
+        <div class="sounds">
+          <button id="addTracks">Add mp3 files</button><button id="addFolder">Add folder</button><button id="clearTracks">Remove mine</button>
+        </div>
+        <form id="plForm" class="task-form"><input id="plName" type="text" placeholder="New playlist name" maxlength="40" aria-label="New playlist name"><button class="btn small" type="submit">Create</button></form>
+        <input type="file" id="trackFiles" accept="audio/*" multiple hidden>
+        <input type="file" id="folderFiles" webkitdirectory multiple hidden>
+        <label class="slider">Volume <input type="range" id="musicVol" min="0" max="100" value="50"></label>
+      </section>
+
+      <section class="panel" id="thoughtPanel">
+        <h2>Parked thoughts</h2>
+        <ul id="thoughtList" class="tasks"></ul>
+        <p class="empty" id="thoughtEmpty">Nothing parked. Capture stray ideas during focus and deal with them on a break.</p>
+      </section>
+
+      <section class="panel" id="statsPanel">
+        <h2>Today</h2>
+        <dl class="stats">
+          <div><dt>Sessions</dt><dd id="statToday">0</dd></div>
+          <div><dt>Focus time</dt><dd id="statMinutes">0m</dd></div>
+          <div><dt>Day streak</dt><dd id="statStreak">0</dd></div>
+        </dl>
+        <p class="goal-text" id="goalText"></p><div class="goal" aria-hidden="true"><i id="goalBar"></i></div>
+        <div class="week" id="week" aria-label="Last 7 days"></div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<dialog id="settings">
+  <form method="dialog" id="settingsForm">
+    <h2>Settings</h2>
+    <label>Focus (min) <input type="number" name="focus" min="1" max="120"></label>
+    <label>Short break (min) <input type="number" name="short" min="1" max="60"></label>
+    <label>Long break (min) <input type="number" name="long" min="1" max="90"></label>
+    <label>Sessions before long break <input type="number" name="cycles" min="2" max="8"></label>
+    <label>Daily goal (sessions) <input type="number" name="goal" min="1" max="20"></label>
+    <label class="check"><input type="checkbox" name="autoBreak"> Start breaks automatically</label>
+    <label class="check"><input type="checkbox" name="autoFocus"> Start focus automatically</label>
+    <label class="check"><input type="checkbox" name="chime"> Play chime</label>
+    <label class="check"><input type="checkbox" name="notify"> Desktop notifications</label>
+    <div class="dialog-actions">
+      <button class="btn ghost" value="cancel">Cancel</button>
+      <button class="btn primary" value="save">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script src="media.js"></script>
+</body>
+</html>
