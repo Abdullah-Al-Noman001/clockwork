@@ -1,59 +1,73 @@
 # Clockwork
 
-A feature-rich but calm focus timer. Black background, engraved Cinzel type, a gear dial and accent-edged panels. Fully offline: fonts are bundled, no network calls.
-
-## Run
-Serve the folder (`python3 -m http.server 8000`) and open `http://localhost:8000`, or open `index.html` directly.
-
-## Look
-- **Theme** dropdown: Brass, Acid, Ember, Violet, Azure, Crimson, Ash (accent colors only).
-- **Finish** dropdown: **Matte** (flat, no glow; default) or **Glow** (soft light on the accent).
-Both choices are remembered.
+Clockwork is a local-first Pomodoro timer with a gear dial, task tracking, ambience, and playlists. The browser app is built with plain HTML, CSS, and JavaScript; the optional desktop app is packaged with Electron.
 
 ## Features
-- Focus / short / long breaks (default 25 / 5 / 15, long break every 4), resumes after reload, countdown in the tab title
-- Tasks with estimated sessions, daily stats, streak, 7-day bars, daily goal bar
-- Parked thoughts: press P during focus to capture a stray idea
-- Ambience: rain and wind
-- Music: your own mp3s, folders and named playlists, shuffle, prev/next, volume
-- Zen mode (F), notifications, auto-start options
 
-Shortcuts: Space start/pause, R reset, S skip, F zen, P park a thought, 1/2/3 mode.
+- Focus, short-break, and long-break timers with configurable durations and session cycles
+- Tasks, daily statistics, streaks, a seven-day chart, and a daily goal
+- Parked thoughts, notifications, auto-start options, and Zen mode
+- Rain and wind ambience, plus user-managed music playlists
+- Seven accent themes, matte and glow finishes, and keyboard shortcuts
+- Locally stored settings and playlists; bundled fonts and ambience
 
-## Where to put your default rain and wind sounds
-Copy them into the `sounds/` folder with these exact names:
+## Run in a browser
 
+Open `index.html` directly, or serve the project folder:
+
+```sh
+python -m http.server 8000
 ```
-sounds/rain.mp3
-sounds/wind.mp3
+
+Then open <http://localhost:8000>.
+
+## Run or build the desktop app
+
+Install the locked dependencies and start Electron:
+
+```sh
+npm ci
+npm start
 ```
-Using .ogg or .wav? Change the names in `config.js` under `ambience`. If a file is missing, the app plays a built-in generated sound instead. Use loops that end where they begin (OGG loops more cleanly than MP3).
 
-Users can override either sound inside the app: Ambience panel, pick Rain or Wind, "Use my file". "Restore default" goes back to your files.
+Build an installer for the current operating system with `npm run dist`, or select a platform:
 
-## Music and playlists
-**Users, inside the app (Your music panel):**
-- **Add mp3 files**: pick one or many; they go into the selected playlist (or "My tracks").
-- **Add folder**: every audio file in the folder becomes a playlist named after the folder.
-- **New playlist**: type a name and Create, then add files to it.
-- Pick a playlist from the dropdown; "All tracks" plays everything.
-- **Remove mine** deletes files the user added from the selected playlist. Files from `config.js` are never deleted.
-Added files are stored in the browser (IndexedDB) and survive reloads.
+```sh
+npm run dist:win
+npm run dist:mac
+npm run dist:linux
+```
 
-**You, as the developer (default music):** put files in `music/` and list them in `config.js` (`window.CLOCKWORK_CONFIG`):
+On Windows, the installer is written to `dist/Clockwork Setup <version>.exe`. Build each platform on that platform. Build output and installed dependencies are ignored by Git and can be recreated with these commands. Replace `build/icon.png` to use a custom app icon.
+
+## Media
+
+The default rain and wind files are in `sounds/` and are configured in `config.js`. If a default file is unavailable, the app generates ambience. To add default music, put audio files in `music/` and list their paths in `config.js`:
+
 ```js
-tracks: ['music/song.mp3'],                         // "Default" playlist
-playlists: { 'Deep work': ['music/a.mp3', 'music/b.mp3'] },
+tracks: ['music/song.mp3'],
+playlists: {
+  'Deep work': ['music/first.ogg', 'music/second.mp3'],
+},
 ```
-Only use audio you have the rights to.
 
-## Desktop app (Electron)
-```bash
-npm install
-npm start        # run
-npm run dist     # build installer into dist/ (build on the target OS)
-```
-Replace `build/icon.png` (512x512) with your own icon. Files in `music/` and `sounds/` are bundled.
+Users can also add audio files and folders from the app. Their playlists are stored locally in the browser. Only add music or other audio that you have permission to distribute.
 
-## Files
-`index.html`, `style.css`, `script.js` (timer, tasks, stats, generated audio), `media.js` (playlists, custom ambience), `config.js` (your media), `main.js` + `package.json` (desktop), `fonts/`, `sounds/`, `music/`, `DEVELOPMENT_PLAN.md`.
+## Keyboard shortcuts
+
+| Key | Action |
+| --- | --- |
+| Space | Start or pause |
+| R | Reset |
+| S | Skip |
+| F | Toggle Zen mode |
+| P | Park a thought during focus |
+| 1 / 2 / 3 | Select focus / short break / long break |
+
+## Project files
+
+- `index.html`, `style.css`, `script.js` — browser interface and timer
+- `media.js`, `config.js` — playlists, ambience, and default media configuration
+- `main.js`, `package.json`, `package-lock.json` — Electron entry point and build setup
+- `build/`, `fonts/`, `sounds/`, `music/` — app icon, licensed fonts, ambience, and optional music
+- `DEVELOPMENT_PLAN.md` — project roadmap
