@@ -152,6 +152,7 @@ body:not([data-mode="focus"]) .park { display: none; }
 
 .icon-btn { font-family: var(--body); }
 select.icon-btn { background: #000; color: var(--ink); padding-right: .4rem; }
+option { background: var(--panel); color: var(--ink); }
 
 /* Finish: matte (default, flat) or glow (soft light on the accent) */
 [data-finish="glow"] body { --glow: color-mix(in srgb, var(--accent) 45%, transparent); }
