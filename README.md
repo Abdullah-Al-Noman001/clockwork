@@ -69,5 +69,5 @@ Users can also add audio files and folders from the app. Their playlists are sto
 - `index.html`, `style.css`, `script.js` — browser interface and timer
 - `media.js`, `config.js` — playlists, ambience, and default media configuration
 - `main.js`, `package.json`, `package-lock.json` — Electron entry point and build setup
-- `build/`, `fonts/`, `sounds/`, `music/` — app icon, licensed fonts, ambience, and optional music
+- `build/`, `fonts/`, `sounds/` — app icon, licensed fonts, and bundled ambience; add `music/` when providing default tracks
 - `DEVELOPMENT_PLAN.md` — project roadmap

@@ -1,2 +1,0 @@
-Optional default music. Put .mp3 files here and list them in config.js (tracks or playlists).
-Listeners can also add their own files and folders from inside the app.

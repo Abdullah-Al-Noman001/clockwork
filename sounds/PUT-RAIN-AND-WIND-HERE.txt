@@ -1,2 +1,0 @@
-Put your default rain sound here as rain.mp3 and your default wind sound as wind.mp3.
-Other names work if you update config.js. If a file is missing, a built-in generated sound plays instead.
