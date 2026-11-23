@@ -42,7 +42,7 @@ On Windows, the installer is written to `dist/Clockwork Setup <version>.exe`. Bu
 
 ## Media
 
-The default rain and wind files are in `sounds/` and are configured in `config.js`. If a default file is unavailable, the app generates ambience. To add default music, put audio files in `music/` and list their paths in `config.js`:
+The default rain and wind files are in `sounds/`, are configured in `config.js`, and loop every 15 minutes. If a default file is unavailable, the app generates ambience. To add default music, put audio files in `music/` and list their paths in `config.js`:
 
 ```js
 tracks: ['music/song.mp3'],
